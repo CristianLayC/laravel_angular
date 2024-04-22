@@ -1,0 +1,15 @@
+.taskContainer{
+    margin: 1em 2em;
+}
+
+.card{
+    margin: 1em .5em;
+}
+
+.modal button{
+    margin-top: 1em;
+}
+
+.buttonOpt > button{
+    margin: 0 2px;
+}

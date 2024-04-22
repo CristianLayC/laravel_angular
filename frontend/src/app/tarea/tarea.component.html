@@ -1,0 +1,120 @@
+<div class="taskContainer">
+  <h2>Lista de Tareas</h2>
+
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearTareaModal">
+    Crear Tarea
+  </button>
+
+  @if (guardadoExitoso){
+    <div  class="alert alert-success" role="alert">
+      ¡Éxito! La tarea ha sido creada correctamente.
+    </div>
+  }
+
+  @if (errorAlGuardar){
+    <div class="alert alert-danger" role="alert">
+      Lo sentimos, ha ocurrido un error al intentar guardar la tarea. Por favor, inténtalo de nuevo.
+    </div>
+  }
+
+  <div class="row">
+    @for (tarea of data; track tarea.id){
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-header">
+            Tarea #{{ tarea.id }}
+            <div class="buttonOpt" style="float:right">
+              <button type="button" class="btn btn-success" (click)="onEdit(tarea.id)" data-bs-toggle="modal" data-bs-target="#editTareaModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                </svg>
+              </button>
+              
+              <button type="button" class="btn btn-danger" (click)="onDelete(tarea.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                  <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ tarea.titulo }}</h5>
+            <p class="card-text">{{ tarea.descripcion }}</p>
+            <p class="card-text"><small class="text-muted">Estado: {{ tarea.estado }}</small></p>
+            <p class="card-text"><small class="text-muted">Creada: {{ tarea.fecha_creacion  }}</small></p>
+          </div>
+        </div>
+      </div>
+    } 
+  </div>
+
+  <div class="modal fade" id="crearTareaModal" tabindex="-1" role="dialog" aria-labelledby="crearTareaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crearTareaModalLabel">Crear Nueva Tarea</h5>
+          
+        </div>
+        <div class="modal-body">
+          <!-- Formulario para crear tarea -->
+          <form #tareaForm="ngForm" (ngSubmit)="onSubmit(tareaForm)">
+            <div class="form-group">
+              <label for="titulo">Título</label>
+              <input type="text" class="form-control" id="titulo" name="titulo" ngModel required>
+            </div>
+            <div class="form-group">
+              <label for="descripcion">Descripción</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="3" ngModel required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="estado">Estado</label>
+              
+              <select class="form-control" id="estado" name="estado" ngModel required>
+                <option value="pendiente">Pendiente</option>
+                <option value="en progreso">En Progreso</option>
+                <option value="completada">Completada</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success close"  data-bs-target="#crearTareaModal" data-bs-toggle="modal"  data-dismiss="modal" aria-label="Close">Crear</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editTareaModal" tabindex="-1" role="dialog" aria-labelledby="editTareaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editTareaModalLabel">Editar Tarea</h5>
+        </div>
+        <div class="modal-body">
+          <!-- Formulario para editar tarea -->
+          <form #tareaFormEdit="ngForm" (ngSubmit)="onSubmitEdit(tareaFormEdit)">
+            <input type="hidden" id="idEdit" name="idEdit" ngModel="{{detail?.id}}">
+            <div class="form-group">
+              <label for="tituloEdit">Título</label>
+              <input type="text" class="form-control" id="tituloEdit" name="tituloEdit" ngModel="{{detail?.titulo}}" required>
+            </div>
+            <div class="form-group">
+              <label for="descripcionEdit">Descripción</label>
+              <textarea class="form-control" id="descripcionEdit" name="descripcionEdit" rows="3"  ngModel="{{detail?.descripcion}}"  required>/textarea>></textarea>
+            </div>
+            <div class="form-group">
+              <label for="estadoEdit">Estado</label>
+              
+              <select class="form-control" id="estadoEdit" name="estadoEdit"  ngModel="{{detail?.estado}}"  required>
+                <option value="pendiente">Pendiente</option>
+                <option value="en progreso">En Progreso</option>
+                <option value="completada">Completada</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-success close"  data-bs-target="#editTareaModal" data-bs-toggle="modal"  data-dismiss="modal" aria-label="Close">Actualizar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
